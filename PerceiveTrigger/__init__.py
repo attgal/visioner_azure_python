@@ -1,24 +1,28 @@
 import logging
 
 import azure.functions as func
+import torch
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
-    name = req.params.get('name')
-    if not name:
+    model = torch.hub.load('pytorch/vision:v0.10.0', 'alexnet', pretrained=True)
+    model.eval()
+
+    image = req.params.get('image')
+    if not image:
         try:
             req_body = req.get_json()
         except ValueError:
             pass
         else:
-            name = req_body.get('name')
+            image = req_body.get('image')
 
-    if name:
-        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
+    if image:
+        return func.HttpResponse(f"This HTTP triggered function executed successfully, image field is present.")
     else:
         return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
+             "This HTTP triggered function executed successfully, but image field is not present in the request.",
              status_code=200
         )
