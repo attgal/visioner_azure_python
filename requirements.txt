@@ -3,3 +3,7 @@
 # Manually managing azure-functions-worker may cause unexpected issues
 
 azure-functions
+-f https://download.pytorch.org/whl/torch_stable.html 
+torch==2.1.0+cpu
+-f https://download.pytorch.org/whl/torch_stable.html
+torchvision==0.16+cpu
