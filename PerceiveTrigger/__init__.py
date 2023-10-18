@@ -16,17 +16,29 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     logger.debug('Hello')
     logger.debug('Python HTTP trigger function processed a request.')
 
+    if not req.files:
+        return func.HttpResponse(
+                "Missing image field! Exiting...",
+                status_code=400
+            )
+    
+    if len(req.files.getlist('image')) > 1:
+        return func.HttpResponse(
+                "Please post only one file at a time!",
+                status_code=400
+            )
+
+
+#   TODO rewrite to handle one
     for input_file in req.files.values():
         filename = input_file.filename
         contents = input_file.stream.read()
 
         logger.info('Filename: %s' % filename)
-        logger.info('Contents:')
-        logger.info(contents)
+#        logger.info('Contents:')
+#        logger.info(contents)
 
-
-    return func.HttpResponse(f'Done\n')
-
+    return func.HttpResponse(f"This HTTP triggered function executed successfully, image field is present.")
 
     image = req.params.get('image')
     logger.debug(image)
